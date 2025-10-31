@@ -6,9 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PasswordUpdateRequest extends FormRequest
 {
-    public function authorize(): bool
+     public function authorize(): bool
     {
-        return auth()->guard('admin')->check();
+        return true;
     }
 
     public function rules(): array

@@ -5,18 +5,18 @@ namespace App\Services;
 class Notify {
 
     // Created Notification
-    static function createdNotification() {
-        return notyf()->addSuccess('Created Successfully', 'Success!');
+    static function createdNotification($message) {
+        return notyf()->addSuccess($message, 'Success!');
     }
 
     // Updated Notification
-    static function updatedNotification() {
-        return notyf()->addSuccess('Updated Successfully', 'Success!');
+    static function updatedNotification($message) {
+        return notyf()->addSuccess($message, 'Success!');
     }
 
     // Deleted Notification
-    static function deletedNotification() {
-        return notyf()->addSuccess('Deleted Successfully', 'Success!');
+    static function deletedNotification($message) {
+        return notyf()->addSuccess($message, 'Success!');
     }
 
     static function errorNotification(string $error) {

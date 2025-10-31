@@ -6,10 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ProfileUpdateRequest extends FormRequest
 {
-    public function authorize(): bool
+     public function authorize(): bool
     {
-        // Cho phép tất cả admin đã đăng nhập thực hiện (có thể thêm policy sau)
-        return auth()->guard('admin')->check();
+        return true;
     }
 
     public function rules(): array
