@@ -10,29 +10,29 @@
           </div>
 
           <div class="card card-primary">
-            <div class="card-header"><h4>Login</h4></div>
+            <div class="card-header"><h4>Đăng nhập</h4></div>
 
             <div class="card-body">
-            <!-- Session Status -->
+            <!-- Trạng thái phiên -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
 
               <form method="POST" action="{{ route('admin.login') }}">
                 @csrf
 
                 <div class="form-group">
-                  <label for="email">Email</label>
+                  <label for="email">Địa chỉ Email</label>
                   <input id="email" type="email" value="{{ old('email') }}" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" name="email" tabindex="1" required autofocus>
 
                   <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
-                <!-- Password -->
+                <!-- Mật khẩu -->
                 <div class="form-group">
                   <div class="d-block">
-                      <label for="password" class="control-label">Password</label>
+                      <label for="password" class="control-label">Mật khẩu</label>
                     <div class="float-right">
                       <a href="{{ route('admin.password.request') }}" class="text-small">
-                        Forgot Password?
+                        Quên mật khẩu?
                       </a>
                     </div>
                   </div>
@@ -40,17 +40,17 @@
                   <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
-                <!-- Remember Me -->
+                <!-- Ghi nhớ đăng nhập -->
                 <div class="form-group">
                   <div class="custom-control custom-checkbox">
                     <input type="checkbox" name="remember" class="custom-control-input" tabindex="3" id="remember-me">
-                    <label class="custom-control-label" for="remember-me">Remember Me</label>
+                    <label class="custom-control-label" for="remember-me">Ghi nhớ đăng nhập</label>
                   </div>
                 </div>
 
                 <div class="form-group">
                   <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                    Login
+                    Đăng nhập
                   </button>
                 </div>
               </form>
@@ -59,7 +59,7 @@
           </div>
 
           <div class="simple-footer">
-            Copyright &copy; MTU {{ date('Y') }}
+            Bản quyền &copy; MTU {{ date('Y') }}
           </div>
         </div>
       </div>

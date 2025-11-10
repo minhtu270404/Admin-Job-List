@@ -57,41 +57,41 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => ['guest:admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('login');
+        ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-                ->name('password.request');
+        ->name('password.request');
 
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-                ->name('password.email');
+        ->name('password.email');
 
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-                ->name('password.reset');
+        ->name('password.reset');
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
-                ->name('password.store');
+        ->name('password.store');
 });
 
 Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->name('logout');
+        ->name('logout');
 
     /** Profile update routes */
-     Route::controller(ProfileUpdateController::class)
-            ->prefix('profile')
-            ->name('profile.')
-            ->group(function () {
-                Route::get('/', 'showProfile')->name('show');
-                Route::post('/', 'updateProfile')->name('update');
-                Route::post('/remove-photo', 'removePhoto')->name('remove-photo');
+    Route::controller(ProfileUpdateController::class)
+        ->prefix('profile')
+        ->name('profile.')
+        ->group(function () {
+            Route::get('/', 'showProfile')->name('show');
+            Route::post('/', 'updateProfile')->name('update');
+            Route::post('/remove-photo', 'removePhoto')->name('remove-photo');
 
-                Route::get('/password/change', 'showChangePassword')->name('password.show');
-                Route::post('/password/update', 'updatePassword')->name('password.update');
+            Route::get('/password/change', 'showChangePassword')->name('password.show');
+            Route::post('/password/update', 'updatePassword')->name('password.update');
 
-                Route::get('/logouts', 'logout')->name('logouts');
-            });
+            Route::get('/logouts', 'logout')->name('logouts');
+        });
 
 
     /** Dashboard Route */
@@ -110,6 +110,9 @@ Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin', 'as' => 'admi
 
     /** City Route */
     Route::resource('cities', CityController::class);
+    // Lấy danh sách thành phố theo tỉnh
+    Route::get('get-cities/{state_id}', [LocationController::class, 'getCitiesOfState'])->name('get-cities');
+
     Route::get('get-states/{country_id}', [LocationController::class, 'getStatesOfCountry'])->name('get-states');
 
     /** Language Route */

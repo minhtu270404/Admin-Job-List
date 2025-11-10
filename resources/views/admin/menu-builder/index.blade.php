@@ -3,7 +3,7 @@
 @section('contents')
     <section class="section">
         <div class="section-header">
-            <h1>Menu Builder</h1>
+            <h1>Trình tạo menu</h1>
         </div>
 
         <div class="section-body">
@@ -18,7 +18,6 @@
             </div>
         </div>
     </section>
-
 @endsection
 
 @push('scripts')

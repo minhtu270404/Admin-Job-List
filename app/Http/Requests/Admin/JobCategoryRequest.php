@@ -8,15 +8,12 @@ class JobCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        // Nếu bạn đã dùng middleware permission rồi thì có thể return true
-        // hoặc kiểm tra theo logic riêng như:
-        // return $this->user()->can('job category create');
         return true;
     }
 
     public function rules(): array
     {
-        $id = $this->route('job_category'); // Tên parameter trong route, nếu khác thì đổi
+        $id = $this->route('job_category'); 
 
         $rules = [
             'icon' => ['nullable', 'max:255'],

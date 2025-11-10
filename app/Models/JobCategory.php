@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class JobCategory extends Model
 {
     use HasFactory, Sluggable;
+    
 
     public function sluggable(): array
     {

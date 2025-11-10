@@ -1,63 +1,64 @@
 @extends('admin.layouts.master')
 
 @section('contents')
-    <section class="section">
-        <div class="section-header">
-            <h1>Cities</h1>
-        </div>
+<section class="section">
+    <div class="section-header">
+        <h1>Thành phố</h1>
+    </div>
 
-        <div class="section-body">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Create City</h4>
+    <div class="section-body">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Thêm thành phố mới</h4>
+                </div>
 
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('admin.cities.store') }}" method="POST">
-                            @csrf
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="">Country</label>
-                                        <select name="country" id="" class="form-control select2 country {{ hasError($errors, 'country') }}">
-                                            <option value="">Select</option>
-                                            @foreach ($countries as $country)
-                                                <option value="{{ $country->id }}">{{ $country->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-input-error :messages="$errors->get('country')" class="mt-2" />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="">States</label>
-                                        <select name="state" id="" class="form-control select2 state {{ hasError($errors, 'state') }}">
-                                            <option value="">Select</option>
-
-                                        </select>
-                                        <x-input-error :messages="$errors->get('state')" class="mt-2" />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="">City Name</label>
-                                        <input type="text" class="form-control {{ hasError($errors, 'city') }}" name="city" value="{{ old('city') }}">
-                                        <x-input-error :messages="$errors->get('city')" class="mt-2" />
-                                    </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.cities.store') }}" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Quốc gia</label>
+                                    <select name="country" class="form-control select2 country {{ hasError($errors, 'country') }}">
+                                        <option value="">-- Chọn quốc gia --</option>
+                                        @foreach ($countries as $country)
+                                            <option value="{{ $country->id }}">{{ $country->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error :messages="$errors->get('country')" class="mt-2" />
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Create</button>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Tỉnh / Bang</label>
+                                    <select name="state" class="form-control select2 state {{ hasError($errors, 'state') }}">
+                                        <option value="">-- Chọn tỉnh / bang --</option>
+                                    </select>
+                                    <x-input-error :messages="$errors->get('state')" class="mt-2" />
+                                </div>
                             </div>
-                        </form>
-                    </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Tên thành phố</label>
+                                    <input type="text" class="form-control {{ hasError($errors, 'city') }}" name="city" value="{{ old('city') }}" placeholder="Nhập tên thành phố...">
+                                    <x-input-error :messages="$errors->get('city')" class="mt-2" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Thêm mới</button>
+                            <a href="{{ route('admin.cities.index') }}" class="btn btn-secondary">Quay lại</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
-
+    </div>
+</section>
 @endsection
 
 @push('scripts')
@@ -67,21 +68,14 @@
             let country_id = $(this).val();
 
             $.ajax({
-                mehtod: 'GET',
+                method: 'GET',
                 url: '{{ route("admin.get-states", ":id") }}'.replace(":id", country_id),
-                data: {},
                 success: function(response) {
-                    let html = '';
-
+                    let html = '<option value="">-- Chọn tỉnh / bang --</option>';
                     $.each(response, function(index, value) {
-                        html += `<option value="${value.id}" >${value.name}</option>`
+                        html += `<option value="${value.id}">${value.name}</option>`;
                     });
-
                     $('.state').html(html);
-
-                },
-                error: function(xhr, status, error) {
-
                 }
             })
         })

@@ -10,6 +10,12 @@ class JobExperience extends Model
 {
     use HasFactory, Sluggable;
 
+    protected $fillable = [
+        'name',    
+        'slug',
+       
+    ];
+
     public function sluggable(): array
     {
         return [

@@ -4,76 +4,77 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\GeneralSettingUpdateRequest;
+use App\Models\SiteSetting;
 use App\Services\Notify;
-use App\Services\Admin\SiteSettingService;
+use App\Services\SiteSettingService;
 use App\Traits\FileUploadTrait;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Throwable;
 
 class SiteSettingController extends Controller
 {
     use FileUploadTrait;
 
-    protected SiteSettingService $siteSettingService;
-
-    public function __construct(SiteSettingService $siteSettingService)
+    function __construct()
     {
         $this->middleware(['permission:site settings']);
-        $this->siteSettingService = $siteSettingService;
     }
 
-    /**
-     * Hiển thị trang cài đặt
-     */
-    public function index(): View
-    {
-        $settings = $this->siteSettingService->getSettings();
-        return view('admin.site-setting.index', compact('settings'));
+    function index() : View {
+        return view('admin.site-setting.index');
     }
 
-    /**
-     * Cập nhật thông tin chung
-     */
-    public function updateGeneralSetting(GeneralSettingUpdateRequest $request): RedirectResponse
+    function updateGeneralSetting(GeneralSettingUpdateRequest $request) 
     {
-        try {
-            $this->siteSettingService->updateGeneral($request->validated());
-            Notify::updatedNotification('Cập nhật thông tin chung thành công.');
-        } catch (Throwable $e) {
-            logger($e);
-            Notify::errorNotification('Đã xảy ra lỗi khi cập nhật. Vui lòng thử lại.');
+        $validatedData = $request->validated();
+
+        foreach($validatedData as $key => $value) {
+            SiteSetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
         }
 
-        return back();
+        $siteSetting = app()->make(SiteSettingService::class);
+        $siteSetting->clearCachedSettings();
+
+        Notify::updatedNotification("Cập Nhật Thành Công");
+
+        return redirect()->back();
     }
 
-    /**
-     * Cập nhật logo và favicon
-     */
-    public function updateLogoSetting(): RedirectResponse
+    function updateLogoSetting(Request $request) 
     {
-        request()->validate([
-            'logo' => ['nullable', 'image', 'max:2000'],
-            'favicon' => ['nullable', 'image', 'max:2000'],
-        ], [
-            'logo.image' => 'Tệp logo phải là hình ảnh hợp lệ.',
-            'logo.max' => 'Dung lượng logo không được vượt quá 2MB.',
-            'favicon.image' => 'Tệp favicon phải là hình ảnh hợp lệ.',
-            'favicon.max' => 'Dung lượng favicon không được vượt quá 2MB.',
+        $request->validate([
+            'logo' => ['image', 'max:2000'],
+            'favicon' => ['image', 'max:2000'],
         ]);
 
-        try {
-            $logoPath = $this->uploadFile(request(), 'logo');
-            $faviconPath = $this->uploadFile(request(), 'favicon');
+        $logoPath = $this->uploadFile($request, 'logo');
+        $faviconPath = $this->uploadFile($request, 'favicon');
 
-            $this->siteSettingService->updateLogo($logoPath, $faviconPath);
-            Notify::updatedNotification('Cập nhật logo và favicon thành công');
-        } catch (Throwable $e) {
-            logger($e);
-            Notify::errorNotification('Đã xảy ra lỗi khi cập nhật hình ảnh. Vui lòng thử lại.');
-        }
+        $logoData = [];
+        if($logoPath) $logoData['value'] = $logoPath;
 
-        return back();
+        SiteSetting::updateOrCreate(
+            ['key' => 'site_logo'],
+            $logoData
+        );
+
+        $faviconData = [];
+        if($faviconPath) $faviconData['value'] = $faviconPath;
+
+        SiteSetting::updateOrCreate(
+            ['key' => 'site_favicon'],
+            $faviconData
+        );
+
+        $siteSetting = app()->make(SiteSettingService::class);
+        $siteSetting->clearCachedSettings();
+
+        Notify::updatedNotification('Cập Nhật Thành Công');
+
+        return redirect()->back();
     }
 }

@@ -11,6 +11,8 @@ use App\Traits\Searchable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Throwable;
+use Illuminate\Http\Request;
+
 
 class JobCategoryController extends Controller
 {
@@ -39,18 +41,25 @@ class JobCategoryController extends Controller
         return view('admin.job.job-category.create');
     }
 
-    public function store(JobCategoryRequest $request): RedirectResponse
+    public function store(Request $request) : RedirectResponse
     {
-        JobCategory::create([
-            'icon' => $request->icon,
-            'name' => $request->name,
-            'show_at_popular' => $request->boolean('show_at_popular'),
-            'show_at_featured' => $request->boolean('show_at_featured'),
+        $request->validate([
+            'icon' => ['required', 'max:255'],
+            'name' => ['required', 'max:255']
         ]);
+
+        $category = new JobCategory();
+        $category->icon = $request->icon;
+        $category->name = $request->name;
+        $category->show_at_popular = $request->show_at_popular;
+        $category->show_at_featured = $request->show_at_featured;
+
+
+        $category->save();
 
         Notify::createdNotification('Thêm Mới Thành Công');
 
-        return redirect()->route('admin.job-categories.index');
+        return to_route('admin.job-categories.index');
     }
 
     public function edit(string $id): View
@@ -59,26 +68,26 @@ class JobCategoryController extends Controller
         return view('admin.job.job-category.edit', compact('category'));
     }
 
-    public function update(JobCategoryRequest $request, string $id): RedirectResponse
+    public function update(Request $request, string $id) 
     {
-        $category = JobCategory::findOrFail($id);
-
-        $category->fill([
-            'name' => $request->name,
-            'show_at_popular' => $request->boolean('show_at_popular'),
-            'show_at_featured' => $request->boolean('show_at_featured'),
+        $request->validate([
+            'icon' => ['nullable', 'max:255'],
+            'name' => ['required', 'max:255']
         ]);
 
-        if ($request->filled('icon')) {
-            $category->icon = $request->icon;
-        }
+        $category = JobCategory::findOrFail($id);
+        if($request->filled('icon')) $category->icon = $request->icon;
+        $category->name = $request->name;
+        $category->show_at_popular = $request->show_at_popular;
+        $category->show_at_featured = $request->show_at_featured;
 
         $category->save();
 
         Notify::updatedNotification('Cập Nhật Thành Công');
 
-        return redirect()->route('admin.job-categories.index');
+        return to_route('admin.job-categories.index');
     }
+
 
     public function destroy(string $id)
     {

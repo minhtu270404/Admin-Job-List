@@ -1,4 +1,3 @@
-
 @extends('admin.auth.layouts.auth-master')
 
 @section('contents')
@@ -11,30 +10,29 @@
           </div>
 
           <div class="alert alert-warning">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+            Quên mật khẩu? Không sao cả. Chỉ cần cho chúng tôi biết địa chỉ email của bạn, chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu và tạo mật khẩu mới.
           </div>
 
           <div class="card card-primary">
-            <div class="card-header"><h4>Forgot Password?</h4></div>
+            <div class="card-header"><h4>Quên mật khẩu?</h4></div>
 
             <div class="card-body">
-            <!-- Session Status -->
+            <!-- Trạng thái phiên -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
 
               <form method="POST" action="{{ route('admin.password.email') }}">
                 @csrf
 
                 <div class="form-group">
-                  <label for="email">Email</label>
+                  <label for="email">Địa chỉ Email</label>
                   <input id="email" type="email" value="{{ old('email') }}" class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" name="email" tabindex="1" required autofocus>
 
                   <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
-
                 <div class="form-group">
                   <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
-                    Email Password Reset Link
+                    Gửi liên kết đặt lại mật khẩu
                   </button>
                 </div>
               </form>
@@ -43,11 +41,10 @@
           </div>
 
           <div class="simple-footer">
-            Copyright &copy; websolutionus {{ date('Y') }}
+            Bản quyền &copy; websolutionus {{ date('Y') }}
           </div>
         </div>
       </div>
     </div>
   </section>
 @endsection
-

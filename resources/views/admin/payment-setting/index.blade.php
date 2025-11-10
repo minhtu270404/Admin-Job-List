@@ -3,14 +3,14 @@
 @section('contents')
 <section class="section">
     <div class="section-header">
-        <h1>Payment Gateway Settings</h1>
+        <h1>Cài đặt cổng thanh toán</h1>
     </div>
 
     <div class="section-body">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                  <h4>All Gateway Settings</h4>
+                  <h4>Tất cả cổng thanh toán</h4>
                 </div>
                 <div class="card-body">
                   <div class="row">
@@ -22,19 +22,14 @@
                         <li class="nav-item">
                           <a class="nav-link" id="profile-tab4" data-toggle="tab" href="#profile4" role="tab" aria-controls="profile" aria-selected="false">Stripe</a>
                         </li>
-                        <li class="nav-item">
-                          <a class="nav-link" id="contact-tab4" data-toggle="tab" href="#contact4" role="tab" aria-controls="contact" aria-selected="false">Razorpay</a>
-                        </li>
+                       
                       </ul>
                     </div>
                     <div class="col-12 col-sm-12 col-md-10">
                       <div class="tab-content no-padding" id="myTab2Content">
 
                         @include('admin.payment-setting.sections.paypal-section')
-
                         @include('admin.payment-setting.sections.stripe-section')
-
-                        @include('admin.payment-setting.sections.razorpay-section')
 
                       </div>
                     </div>

@@ -35,7 +35,8 @@ class SocialIconService
     {
         try {
             SocialIcon::findOrFail($id)->delete();
- Notify::deletedNotification('Xóa Thành Công');            return response(['message' => 'Xóa thành công!'], 200);
+            Notify::deletedNotification('Xóa Thành Công');
+            return response(['message' => 'Xóa thành công!'], 200);
         } catch (Exception $e) {
             Log::error($e);
             return response(['message' => 'Đã xảy ra lỗi, vui lòng thử lại sau!'], 500);
