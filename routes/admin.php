@@ -78,21 +78,11 @@ Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin', 'as' => 'admi
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 
-    /** Profile update routes */
-    Route::controller(ProfileUpdateController::class)
-        ->prefix('profile')
-        ->name('profile.')
-        ->group(function () {
-            Route::get('/', 'showProfile')->name('show');
-            Route::post('/', 'updateProfile')->name('update');
-            Route::post('/remove-photo', 'removePhoto')->name('remove-photo');
 
-            Route::get('/password/change', 'showChangePassword')->name('password.show');
-            Route::post('/password/update', 'updatePassword')->name('password.update');
-
-            Route::get('/logouts', 'logout')->name('logouts');
-        });
-
+           /** Profile update routes */
+    Route::get('profile', [ProfileUpdateController::class, 'index'])->name('profile.index');
+    Route::post('profile', [ProfileUpdateController::class, 'update'])->name('profile.update');
+    Route::post('profile-password', [ProfileUpdateController::class, 'passwordUpdate'])->name('profile-password.update');
 
     /** Dashboard Route */
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

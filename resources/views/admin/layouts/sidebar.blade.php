@@ -17,9 +17,6 @@
                 <a href="{{ route('admin.profile.show') }}" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Hồ sơ cá nhân
                 </a>
-                <a href="{{ route('admin.profile.password.show') }}" class="dropdown-item has-icon">
-                    <i class="fas fa-key"></i> Đổi mật khẩu
-                </a>
                 <div class="dropdown-divider"></div>
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
