@@ -14,7 +14,7 @@
                 <div class="d-sm-none d-lg-inline-block">Xin chào, {{ auth()->guard('admin')->user()->name }}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="{{ route('admin.profile.show') }}" class="dropdown-item has-icon">
+                <a href="{{ route('admin.profile.index') }}" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Hồ sơ cá nhân
                 </a>
                 <div class="dropdown-divider"></div>
