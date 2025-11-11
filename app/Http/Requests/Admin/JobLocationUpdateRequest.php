@@ -26,7 +26,6 @@ class JobLocationUpdateRequest extends FormRequest
             'country.required' => 'Vui lòng chọn quốc gia.',
             'country.exists'   => 'Quốc gia không hợp lệ.',
             'status.required'  => 'Vui lòng chọn trạng thái.',
-            'status.in'        => 'Trạng thái không hợp lệ.',
             'image.image'      => 'Tệp tải lên phải là hình ảnh.',
             'image.mimes'      => 'Định dạng ảnh hợp lệ: jpeg, png, jpg, webp.',
             'image.max'        => 'Kích thước ảnh tối đa là 2MB.',

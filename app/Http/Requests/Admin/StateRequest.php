@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\State;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -8,25 +8,25 @@ class StateRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return true; // middleware kiểm soát quyền
     }
 
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:255'],
-            'country' => ['required', 'integer', 'exists:countries,id'],
+            'name' => 'required|string|max:255',
+            'country_id' => 'required|exists:countries,id',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Vui lòng nhập tên tỉnh/thành phố.',
-            'name.max' => 'Tên không được vượt quá 255 ký tự.',
-            'country.required' => 'Vui lòng chọn quốc gia.',
-            'country.integer' => 'Giá trị quốc gia không hợp lệ.',
-            'country.exists' => 'Quốc gia được chọn không tồn tại trong hệ thống.',
+            'name.required' => 'Vui lòng nhập tên tỉnh / bang.',
+            'name.string' => 'Tên tỉnh / bang phải là chuỗi ký tự.',
+            'name.max' => 'Tên tỉnh / bang không được vượt quá 255 ký tự.',
+            'country_id.required' => 'Vui lòng chọn quốc gia.',
+            'country_id.exists' => 'Quốc gia chọn không hợp lệ.',
         ];
     }
 }

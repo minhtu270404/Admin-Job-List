@@ -10,6 +10,9 @@ class Tag extends Model
 {
     use HasFactory, Sluggable;
 
+    // Cho phép mass assignment
+    protected $fillable = ['name'];
+
     public function sluggable(): array
     {
         return [

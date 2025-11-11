@@ -8,7 +8,7 @@ use App\Services\Admin\CityService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class CityController extends Controller
 {
@@ -20,22 +20,21 @@ class CityController extends Controller
         $this->cityService = $cityService;
     }
 
-
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $cities = $this->cityService->getAllCities($request);
         return view('admin.location.city.index', compact('cities'));
     }
 
-    public function create()
+    public function create(): View
     {
         $countries = $this->cityService->getAllCountries();
         return view('admin.location.city.create', compact('countries'));
     }
 
-    public function store(CityRequest $request)
+    public function store(CityRequest $request): RedirectResponse
     {
-        $this->cityService->createCity($request);
+        $this->cityService->createCity($request->validated());
         return redirect()->route('admin.cities.index')->with('success', 'Thêm thành phố thành công!');
     }
 
@@ -45,16 +44,27 @@ class CityController extends Controller
         return view('admin.location.city.edit', compact('city', 'countries', 'states'));
     }
 
-   
-    public function update(CityRequest $request, string $id)
+    public function update(CityRequest $request, string $id): RedirectResponse
     {
-        $this->cityService->updateCity($request, $id);
+        $this->cityService->updateCity($request->validated(), $id);
         return redirect()->route('admin.cities.index')->with('success', 'Cập nhật thành phố thành công!');
     }
 
-   
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
-        return $this->cityService->deleteCity($id);
+        $response = $this->cityService->deleteCity($id);
+        $status = $response->status();
+        $message = $response->getData()->message ?? '';
+
+        return redirect()->route('admin.cities.index')
+            ->with($status === 200 ? 'success' : 'error', $message);
     }
+
+    /** Ajax: lấy danh sách state theo country */
+    public function getStatesByCountry($country_id)
+    {
+        $states = \App\Models\State::where('country_id', $country_id)->get(['id', 'name']);
+        return response()->json($states);
+    }
+
 }

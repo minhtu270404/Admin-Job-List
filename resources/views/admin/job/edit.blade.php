@@ -438,7 +438,7 @@
 
             $.ajax({
                 mehtod: 'GET',
-                url: '{{ route("get-cities", ":id") }}'.replace(":id", state_id),
+                url: '{{ route("admin.get-cities", ":id") }}'.replace(":id", state_id),
                 data: {},
                 success: function(response) {
                     let html = '';

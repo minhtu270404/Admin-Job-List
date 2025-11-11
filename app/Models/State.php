@@ -10,9 +10,12 @@ class State extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'name', 'country_id', 'created_at', 'updated_at'];
+    // Chỉ những field có thể mass assign
+    protected $fillable = ['name', 'country_id'];
 
-    function country() : BelongsTo {
+    // Quan hệ với Country
+    public function country(): BelongsTo
+    {
         return $this->belongsTo(Country::class);
     }
 }

@@ -3,11 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\State\StateRequest;
+use App\Http\Requests\Admin\StateRequest;
 use App\Services\Admin\StateService;
-use App\Services\Notify;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class StateController extends Controller
@@ -35,25 +33,28 @@ class StateController extends Controller
     public function store(StateRequest $request): RedirectResponse
     {
         $this->stateService->store($request->validated());
-        Notify::createdNotification('Thêm Mới Thành Công');
-        return redirect()->route('admin.states.index');
+        return redirect()->route('admin.states.index')->with('success', 'Thêm mới thành công');
     }
 
     public function edit(string $id): View
     {
-        [$countries, $state] = $this->stateService->edit($id);
-        return view('admin.location.state.edit', compact('countries', 'state'));
+        $data = $this->stateService->edit($id);
+        return view('admin.location.state.edit', $data);
     }
 
     public function update(StateRequest $request, string $id): RedirectResponse
     {
         $this->stateService->update($id, $request->validated());
-        Notify::updatedNotification('Cập Nhật Thành Công');
-        return redirect()->route('admin.states.index');
+        return redirect()->route('admin.states.index')->with('success', 'Cập nhật thành công');
     }
 
-    public function destroy(string $id): Response
+    public function destroy(string $id): RedirectResponse
     {
-        return $this->stateService->delete($id);
+        $response = $this->stateService->delete($id);
+        $status = $response->getStatusCode();
+        $message = $response->getData()->message;
+
+        return redirect()->route('admin.states.index')
+                         ->with($status === 200 ? 'success' : 'error', $message);
     }
 }

@@ -11,6 +11,12 @@ class OrganizationType extends Model
 {
     use HasFactory, Sluggable;
 
+    // Cho phép gán mass assignment cho các trường này
+    protected $fillable = [
+        'name',  // bắt buộc có nếu muốn tạo/update mass
+        'slug',  // nếu bạn muốn mass update slug cũng ok
+    ];
+
     public function sluggable(): array
     {
         return [
@@ -20,7 +26,8 @@ class OrganizationType extends Model
         ];
     }
 
-    function companies() : HasMany {
+    public function companies(): HasMany
+    {
         return $this->hasMany(Company::class, 'organization_type_id', 'id');
     }
 }

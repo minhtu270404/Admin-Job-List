@@ -14,21 +14,21 @@ class CityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country' => ['required', 'integer', 'exists:countries,id'],
-            'state' => ['required', 'integer', 'exists:states,id'],
-            'city' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'state_id' => ['required', 'integer', 'exists:states,id'],
+            'country_id' => ['required', 'integer', 'exists:countries,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'country.required' => 'Vui lòng chọn quốc gia.',
-            'country.exists' => 'Quốc gia không tồn tại.',
-            'state.required' => 'Vui lòng chọn tiểu bang/tỉnh.',
-            'state.exists' => 'Tiểu bang/tỉnh không tồn tại.',
-            'city.required' => 'Vui lòng nhập tên thành phố.',
-            'city.max' => 'Tên thành phố không được vượt quá 255 ký tự.',
+            'name.required' => 'Vui lòng nhập tên thành phố.',
+            'name.max' => 'Tên thành phố không được vượt quá 255 ký tự.',
+            'state_id.required' => 'Vui lòng chọn tỉnh / bang.',
+            'state_id.exists' => 'Tỉnh / bang không tồn tại.',
+            'country_id.required' => 'Vui lòng chọn quốc gia.',
+            'country_id.exists' => 'Quốc gia không tồn tại.',
         ];
     }
 }

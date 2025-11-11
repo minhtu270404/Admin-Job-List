@@ -8,9 +8,9 @@ use App\Http\Requests\Admin\JobLocationUpdateRequest;
 use App\Models\Country;
 use App\Services\Admin\JobLocationService;
 use App\Services\Notify;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Throwable;
 
 class JobLocationController extends Controller
@@ -33,11 +33,11 @@ class JobLocationController extends Controller
     }
 
     /**
-     * Form tạo mới
+     * Form tạo mới địa điểm
      */
     public function create(): View
     {
-        $countries = Country::all(['id', 'name']);
+        $countries = Country::select('id', 'name')->get();
         return view('admin.job-location.create', compact('countries'));
     }
 
@@ -48,42 +48,41 @@ class JobLocationController extends Controller
     {
         $this->jobLocationService->create($request->validated());
         Notify::createdNotification('Thêm Mới Thành Công');
-
         return redirect()->route('admin.job-location.index');
     }
 
     /**
      * Form chỉnh sửa
      */
-    public function edit(string $id): View
+    public function edit(int $id): View
     {
         $location = $this->jobLocationService->findOrFail($id);
-        $countries = Country::all(['id', 'name']);
+        $countries = Country::select('id', 'name')->get();
         return view('admin.job-location.edit', compact('location', 'countries'));
     }
 
     /**
      * Cập nhật địa điểm
      */
-    public function update(JobLocationUpdateRequest $request, string $id): RedirectResponse
+    public function update(JobLocationUpdateRequest $request, int $id): RedirectResponse
     {
         $this->jobLocationService->update($id, $request->validated());
         Notify::updatedNotification('Cập Nhật Thành Công');
-
         return redirect()->route('admin.job-location.index');
     }
 
     /**
      * Xóa địa điểm
      */
-    public function destroy(string $id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         try {
             $this->jobLocationService->delete($id);
- Notify::deletedNotification('Xóa Thành Công');            return response()->json(['message' => 'success'], 200);
+            Notify::deletedNotification('Xóa Thành Công');
+            return response()->json(['message' => 'success'], 200);
         } catch (Throwable $e) {
-            logger($e);
-            return response()->json(['message' => 'Something went wrong. Please try again!'], 500);
+            logger()->error('JobLocationController@destroy: ' . $e->getMessage());
+            return response()->json(['message' => 'Không thể xóa mục này!'], 500);
         }
     }
 }

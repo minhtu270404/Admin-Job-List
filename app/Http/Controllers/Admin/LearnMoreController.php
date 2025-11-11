@@ -19,22 +19,16 @@ class LearnMoreController extends Controller
         $this->learnMoreService = $learnMoreService;
     }
 
-    /**
-     * Hiển thị thông tin Learn More section
-     */
     public function index(): View
     {
         $learn = $this->learnMoreService->getLearnMore();
         return view('admin.learn-more.index', compact('learn'));
     }
 
-    /**
-     * Cập nhật thông tin Learn More section
-     */
     public function update(LearnMoreRequest $request, string $id): RedirectResponse
     {
         $this->learnMoreService->updateOrCreate($request->validated());
-        Notify::updatedNotification('Cập Nhật Thành Công');
+        Notify::updatedNotification('Cập nhật Learn More thành công!');
         return back();
     }
 }

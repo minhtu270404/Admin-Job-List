@@ -31,12 +31,14 @@
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-striped">
-                            <tr>
-                                <th>Tên thành phố</th>
-                                <th>Tỉnh / Bang</th>
-                                <th>Quốc gia</th>
-                                <th style="width: 10%">Hành động</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>Tên thành phố</th>
+                                    <th>Tỉnh / Bang</th>
+                                    <th>Quốc gia</th>
+                                    <th style="width: 10%">Hành động</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 @forelse ($cities as $city)
                                 <tr>
@@ -44,12 +46,16 @@
                                     <td>{{ $city->state?->name }}</td>
                                     <td>{{ $city->country?->name }}</td>
                                     <td>
-                                        <a href="{{ route('admin.cities.edit', $city->id) }}" class="btn-sm btn btn-primary">
+                                        <a href="{{ route('admin.cities.edit', $city->id) }}" class="btn btn-primary btn-sm">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <a href="{{ route('admin.cities.destroy', $city->id) }}" class="btn-sm btn btn-danger delete-item">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </a>
+                                        <form action="{{ route('admin.cities.destroy', $city->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @empty

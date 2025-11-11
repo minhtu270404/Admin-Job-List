@@ -20,14 +20,14 @@ class LocationController extends Controller
     /**
      * Lấy danh sách state theo country_id
      */
-    public function getStatesOfCountry(GetStatesRequest $request): JsonResponse
-    {
-        $states = $this->locationService->getStatesByCountry($request->country_id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Lấy danh sách tiểu bang thành công.',
-            'data' => $states,
-        ]);
+    public function getStatesOfCountry($country_id)
+{
+    try {
+        $states = \App\Models\State::where('country_id', $country_id)->get();
+        return response()->json($states);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
 }

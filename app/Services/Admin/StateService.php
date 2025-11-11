@@ -2,20 +2,18 @@
 
 namespace App\Services\Admin;
 
+use App\Models\State;
 use App\Models\City;
 use App\Models\Country;
-use App\Models\State;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Illuminate\Http\Response;
 
 class StateService
 {
     public function getAll()
     {
-        return State::with('country')
-            ->orderByDesc('id')
-            ->paginate(20);
+        return State::with('country')->orderByDesc('id')->paginate(20);
     }
 
     public function getCountries()
@@ -27,15 +25,15 @@ class StateService
     {
         return State::create([
             'name' => $data['name'],
-            'country_id' => $data['country'],
+            'country_id' => $data['country_id'],
         ]);
     }
 
     public function edit(string $id): array
     {
-        $countries = Country::all();
         $state = State::findOrFail($id);
-        return [$countries, $state];
+        $countries = $this->getCountries();
+        return ['state' => $state, 'countries' => $countries];
     }
 
     public function update(string $id, array $data): State
@@ -43,21 +41,20 @@ class StateService
         $state = State::findOrFail($id);
         $state->update([
             'name' => $data['name'],
-            'country_id' => $data['country'],
+            'country_id' => $data['country_id'],
         ]);
-
         return $state;
     }
 
     public function delete(string $id): Response
     {
         if (City::where('state_id', $id)->exists()) {
-            return response(['message' => 'Tỉnh/thành này đã được sử dụng, không thể xóa!'], 500);
+            return response(['message' => 'Tỉnh / bang này đã được sử dụng, không thể xóa!'], 422);
         }
 
         try {
             State::findOrFail($id)->delete();
- Notify::deletedNotification('Xóa Thành Công');            return response(['message' => 'Xóa thành công!'], 200);
+            return response(['message' => 'Xóa thành công!'], 200);
         } catch (Exception $e) {
             Log::error($e);
             return response(['message' => 'Đã xảy ra lỗi, vui lòng thử lại sau!'], 500);

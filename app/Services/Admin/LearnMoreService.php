@@ -3,16 +3,14 @@
 namespace App\Services\Admin;
 
 use App\Models\LearnMore;
-use App\Traits\FileUploadTrait;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class LearnMoreService
 {
-    use FileUploadTrait;
-
     /**
-     * Lấy thông tin Learn More section
+     * Lấy thông tin Learn More
      */
     public function getLearnMore(): ?LearnMore
     {
@@ -20,20 +18,20 @@ class LearnMoreService
     }
 
     /**
-     * Cập nhật thông tin Learn More section
+     * Cập nhật hoặc tạo Learn More
      */
     public function updateOrCreate(array $data): LearnMore
     {
         try {
             $formData = [
-                'title' => $data['title'],
-                'main_title' => $data['main_title'],
-                'sub_title' => $data['sub_title'],
+                'title' => $data['title'] ?? null,
+                'main_title' => $data['main_title'] ?? null,
+                'sub_title' => $data['sub_title'] ?? null,
                 'url' => $data['url'] ?? null,
             ];
 
-            if (isset($data['image'])) {
-                $formData['image'] = $this->uploadFileFromRequest($data['image'], 'uploads/learnmore');
+            if (!empty($data['image'])) {
+                $formData['image'] = $this->uploadFile($data['image'], 'uploads/learnmore');
             }
 
             return LearnMore::updateOrCreate(['id' => 1], $formData);
@@ -44,10 +42,12 @@ class LearnMoreService
     }
 
     /**
-     * Upload file (nếu bạn dùng trait FileUploadTrait)
+     * Upload file lên storage/public và trả về path
      */
-    private function uploadFileFromRequest($file, $path)
+    private function uploadFile($file, string $folder): string
     {
-        return $this->uploadFileDirect($file, $path);
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $path = $file->storeAs($folder, $filename, 'public'); // storage/app/public/{folder}
+        return $path;
     }
 }

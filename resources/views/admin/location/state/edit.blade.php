@@ -1,54 +1,75 @@
 @extends('admin.layouts.master')
 
 @section('contents')
-    <section class="section">
-        <div class="section-header">
-            <h1>Chỉnh sửa Tỉnh/Thành phố</h1>
-        </div>
+<section class="section">
+    <div class="section-header">
+        <h1>Chỉnh sửa Tỉnh/Thành phố</h1>
+    </div>
 
-        <div class="section-body">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Cập nhật Tỉnh/Thành phố</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('admin.states.update', $state->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
+    <div class="section-body">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ route('admin.states.update', $state->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Quốc gia</label>
-                                        <select name="country" class="form-control select2 {{ hasError($errors, 'country') }}">
-                                            <option value="">-- Chọn quốc gia --</option>
-                                            @foreach ($countries as $country)
-                                                <option @selected($state->country_id === $country->id)
-                                                    value="{{ $country->id }}">{{ $country->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-input-error :messages="$errors->get('country')" class="mt-2" />
-                                    </div>
-                                </div>
+                        <div class="form-group">
+                            <label>Quốc gia</label>
+                            <select name="country_id" class="form-control select-country">
+                                <option value="">-- Chọn quốc gia --</option>
+                                @foreach($countries as $country)
+                                    <option value="{{ $country->id }}" {{ $state->country_id == $country->id ? 'selected' : '' }}>
+                                        {{ $country->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('country_id')" class="mt-2" />
+                        </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="">Tên Tỉnh/Thành phố</label>
-                                        <input type="text" class="form-control {{ hasError($errors, 'name') }}"
-                                            name="name" value="{{ old('name', $state->name) }}">
-                                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label>Tỉnh/Thành phố</label>
+                            <input type="text" name="name" class="form-control" value="{{ old('name', $state->name) }}" placeholder="Nhập tên tỉnh / bang">
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        </div>
 
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Cập nhật</button>
-                            </div>
-                        </form>
-                    </div>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        <a href="{{ route('admin.states.index') }}" class="btn btn-secondary">Quay lại</a>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('.select-country').change(function() {
+        var country_id = $(this).val();
+        var stateSelect = $('select[name="state_id"]');
+
+        if(!stateSelect.length) return;
+
+        stateSelect.empty();
+        stateSelect.append('<option value="">-- Chọn tỉnh/thành --</option>');
+
+        if(country_id) {
+            $.ajax({
+                url: '/admin/get-states/' + country_id,
+                type: 'GET',
+                success: function(data) {
+                    data.forEach(function(state) {
+                        stateSelect.append('<option value="'+state.id+'">'+state.name+'</option>');
+                    });
+                },
+                error: function(err) {
+                    console.error('Lỗi load state:', err);
+                }
+            });
+        }
+    });
+});
+</script>
 @endsection

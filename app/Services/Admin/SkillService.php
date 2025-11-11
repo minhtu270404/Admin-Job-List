@@ -8,13 +8,15 @@ use App\Models\CandidateSkill;
 use App\Traits\Searchable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Response;
 use Exception;
 
 class SkillService
 {
     use Searchable;
 
+    /**
+     * Lấy danh sách kỹ năng với tìm kiếm
+     */
     public function getAll(Request $request)
     {
         $query = Skill::query();
@@ -22,16 +24,25 @@ class SkillService
         return $query->paginate(20);
     }
 
+    /**
+     * Tìm kỹ năng theo ID
+     */
     public function find(string $id): Skill
     {
         return Skill::findOrFail($id);
     }
 
+    /**
+     * Thêm mới kỹ năng
+     */
     public function store(array $data): Skill
     {
         return Skill::create($data);
     }
 
+    /**
+     * Cập nhật kỹ năng
+     */
     public function update(string $id, array $data): Skill
     {
         $skill = Skill::findOrFail($id);
@@ -39,23 +50,24 @@ class SkillService
         return $skill;
     }
 
-    public function delete(string $id): Response
+    /**
+     * Xóa kỹ năng
+     * Ném exception nếu không xóa được
+     */
+    public function delete(string $id): void
     {
         $skillExist = JobSkills::where('skill_id', $id)->exists();
         $candidateSkillExist = CandidateSkill::where('skill_id', $id)->exists();
 
         if ($skillExist || $candidateSkillExist) {
-            return response([
-                'message' => 'Không thể xóa kỹ năng này vì đang được sử dụng trong hệ thống!'
-            ], 500);
+            throw new Exception('Không thể xóa kỹ năng này vì đang được sử dụng trong hệ thống!');
         }
 
         try {
             Skill::findOrFail($id)->delete();
- Notify::deletedNotification('Xóa Thành Công');            return response(['message' => 'Xóa thành công!'], 200);
         } catch (Exception $e) {
             Log::error($e);
-            return response(['message' => 'Đã xảy ra lỗi, vui lòng thử lại sau!'], 500);
+            throw new Exception('Đã xảy ra lỗi, vui lòng thử lại sau!');
         }
     }
 }
