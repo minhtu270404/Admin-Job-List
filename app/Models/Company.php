@@ -11,8 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Company extends Model
 {
-    use Sluggable;
-    use HasFactory;
+    use HasFactory, Sluggable;
 
     protected $fillable = [
         'user_id',
@@ -24,18 +23,28 @@ class Company extends Model
         'vision',
         'industry_type_id',
         'organization_type_id',
-        'team_size_id' ,
+        'team_size_id',
         'establishment_date',
         'website',
         'email',
         'phone',
         'country',
         'state',
-        'city' ,
+        'city',
         'address',
         'map_link',
+        'is_profile_verified',
+        'document_verified_at',
+        'profile_completion',
+        'visibility',
+        'total_views',
     ];
-
+    protected $casts = [
+        'establishment_date' => 'date',
+    ];
+    /**
+     * Return the sluggable configuration array for this model.
+     */
     public function sluggable(): array
     {
         return [
@@ -45,33 +54,59 @@ class Company extends Model
         ];
     }
 
-    function industryType() : BelongsTo {
-        return $this->belongsTo(IndustryType::class, 'industry_type_id', 'id');
+    /** RELATIONSHIPS **/
+
+    // Người dùng sở hữu công ty
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
-    function organizationType() : BelongsTo {
-        return $this->belongsTo(OrganizationType::class, 'organization_type_id', 'id');
+    // Loại ngành nghề
+    public function industryType(): BelongsTo
+    {
+        return $this->belongsTo(IndustryType::class);
     }
 
-    function teamSize() : BelongsTo {
-        return $this->belongsTo(TeamSize::class, 'team_size_id', 'id');
+    // Loại tổ chức
+    public function organizationType(): BelongsTo
+    {
+        return $this->belongsTo(OrganizationType::class);
     }
 
-    function companyCountry() : BelongsTo {
+    // Quy mô đội ngũ
+    public function teamSize(): BelongsTo
+    {
+        return $this->belongsTo(TeamSize::class);
+    }
+
+    // Quốc gia
+    public function country(): BelongsTo
+    {
         return $this->belongsTo(Country::class, 'country', 'id');
     }
-    function companyState() : BelongsTo {
+
+    // Tỉnh/Thành phố
+    public function state(): BelongsTo
+    {
         return $this->belongsTo(State::class, 'state', 'id');
     }
-    function companyCity() : BelongsTo {
+
+    // Thành phố/Quận/Huyện
+    public function city(): BelongsTo
+    {
         return $this->belongsTo(City::class, 'city', 'id');
     }
 
-    function userPlan() : HasOne {
+    // Gói dịch vụ của người dùng cho công ty này
+    public function userPlan(): HasOne
+    {
         return $this->hasOne(UserPlan::class, 'company_id', 'id');
     }
 
-    function jobs() : HasMany {
+    // Các công việc (job) của công ty
+    public function jobs(): HasMany
+    {
         return $this->hasMany(Job::class, 'company_id', 'id');
     }
 }

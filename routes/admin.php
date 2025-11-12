@@ -49,6 +49,8 @@ use App\Http\Controllers\Admin\SkillController;
 use App\Http\Controllers\Admin\SocialIconController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
+use App\Http\Controllers\Admin\CompanyController;
+
 use App\Models\JobExperience;
 use App\Models\SiteSetting;
 use App\Models\SocialIcon;
@@ -79,7 +81,7 @@ Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin', 'as' => 'admi
         ->name('logout');
 
 
-           /** Profile update routes */
+    /** Profile update routes */
     Route::get('profile', [ProfileUpdateController::class, 'index'])->name('profile.index');
     Route::post('profile', [ProfileUpdateController::class, 'update'])->name('profile.update');
     Route::post('profile-password', [ProfileUpdateController::class, 'passwordUpdate'])->name('profile-password.update');
@@ -139,6 +141,9 @@ Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin', 'as' => 'admi
     /** Jobs  */
     Route::post('job-status/{id}', [JobController::class, 'changeStatus'])->name('job-status.update');
     Route::resource('jobs', JobController::class);
+    /** Company Routes */
+    Route::resource('companies', CompanyController::class);
+
     /** Blogs */
     Route::resource('blogs', BlogController::class);
 
