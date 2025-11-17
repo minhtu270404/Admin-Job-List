@@ -95,17 +95,17 @@ Route::group(['middleware' => ['auth:admin'], 'prefix' => 'admin', 'as' => 'admi
     Route::resource('organization-types', OrganizationTypeController::class);
 
     /** Countries Route */
-    Route::resource('countries', CountryController::class);
+    Route::resource('admin/countries', CountryController::class);
 
-    /** State Route */
-    Route::resource('states', StateController::class);
+    // State
+    Route::resource('admin/states', StateController::class);
 
-    /** City Route */
-    Route::resource('cities', CityController::class);
-    // Lấy danh sách thành phố theo tỉnh
-    Route::get('get-cities/{state_id}', [LocationController::class, 'getCitiesOfState'])->name('get-cities');
+    // City
+    Route::resource('admin/cities', CityController::class);
+    Route::get('admin/get-cities/{state_id}', [CityController::class, 'getCitiesByState'])->name('admin.get-cities');
 
-    Route::get('get-states/{country_id}', [LocationController::class, 'getStatesOfCountry'])->name('get-states');
+    // Location
+    Route::get('admin/get-states/{country_id}', [LocationController::class, 'getStatesOfCountry'])->name('admin.get-states');
 
     /** Language Route */
     Route::resource('languages', LanguageController::class);

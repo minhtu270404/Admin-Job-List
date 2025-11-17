@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CountryStoreRequest;
 use App\Http\Requests\Admin\CountryUpdateRequest;
 use App\Services\Admin\CountryService;
-use App\Services\Notify;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Throwable;
@@ -22,68 +20,50 @@ class CountryController extends Controller
         $this->countryService = $countryService;
     }
 
-    /**
-     * Danh sách quốc gia.
-     */
     public function index(): View
     {
         $countries = $this->countryService->getPaginatedCountries();
         return view('admin.location.country.index', compact('countries'));
     }
 
-    /**
-     * Form thêm mới quốc gia.
-     */
     public function create(): View
     {
         return view('admin.location.country.create');
     }
 
-    public function store(CountryStoreRequest $request)
+    public function store(CountryStoreRequest $request): RedirectResponse
     {
         try {
             $this->countryService->createCountry($request->validated());
-            Notify::createdNotification('Thêm Mới Thành Công');
-            return redirect()->route('admin.countries.index');
+            return redirect()->route('admin.countries.index')->with('success', 'Thêm quốc gia thành công');
         } catch (Throwable $e) {
-            logger()->error('Lỗi khi tạo quốc gia: '.$e->getMessage(), ['exception' => $e]);
-            Notify::errorNotification('Không thể tạo quốc gia, vui lòng thử lại!');
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('error', 'Không thể tạo quốc gia');
         }
     }
 
-    public function edit(string $id)
+    public function edit(string $id): View
     {
         $country = $this->countryService->findCountryById($id);
         return view('admin.location.country.edit', compact('country'));
     }
 
-    public function update(CountryUpdateRequest $request, string $id)
+    public function update(CountryUpdateRequest $request, string $id): RedirectResponse
     {
         try {
             $this->countryService->updateCountry($id, $request->validated());
-            Notify::updatedNotification('Cập Nhật Thành Công');
-            return redirect()->route('admin.countries.index');
+            return redirect()->route('admin.countries.index')->with('success', 'Cập nhật quốc gia thành công');
         } catch (Throwable $e) {
-            logger()->error('Lỗi khi cập nhật quốc gia: '.$e->getMessage(), ['exception' => $e]);
-            Notify::errorNotification('Không thể cập nhật, vui lòng thử lại!');
-            return redirect()->back()->withInput();
+            return redirect()->back()->withInput()->with('error', 'Không thể cập nhật quốc gia');
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
         try {
-            $result = $this->countryService->deleteCountry($id);
-
-            if (!$result) {
-                return response()->json(['message' => 'Không thể xoá vì đang được sử dụng!'], 400);
-            }
-
- Notify::deletedNotification('Xóa Thành Công');            return response()->json(['message' => 'success'], 200);
+            $this->countryService->deleteCountry($id);
+            return redirect()->route('admin.countries.index')->with('success', 'Xóa quốc gia thành công');
         } catch (Throwable $e) {
-            logger()->error('Lỗi khi xoá quốc gia: '.$e->getMessage(), ['exception' => $e]);
-            return response()->json(['message' => 'Đã xảy ra lỗi, vui lòng thử lại!'], 500);
+            return redirect()->route('admin.countries.index')->with('error', 'Không thể xóa quốc gia');
         }
     }
 }

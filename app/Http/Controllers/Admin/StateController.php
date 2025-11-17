@@ -33,7 +33,7 @@ class StateController extends Controller
     public function store(StateRequest $request): RedirectResponse
     {
         $this->stateService->store($request->validated());
-        return redirect()->route('admin.states.index')->with('success', 'Thêm mới thành công');
+        return redirect()->route('admin.states.index')->with('success', 'Thêm tỉnh/bang thành công');
     }
 
     public function edit(string $id): View
@@ -45,16 +45,12 @@ class StateController extends Controller
     public function update(StateRequest $request, string $id): RedirectResponse
     {
         $this->stateService->update($id, $request->validated());
-        return redirect()->route('admin.states.index')->with('success', 'Cập nhật thành công');
+        return redirect()->route('admin.states.index')->with('success', 'Cập nhật tỉnh/bang thành công');
     }
 
     public function destroy(string $id): RedirectResponse
     {
-        $response = $this->stateService->delete($id);
-        $status = $response->getStatusCode();
-        $message = $response->getData()->message;
-
-        return redirect()->route('admin.states.index')
-                         ->with($status === 200 ? 'success' : 'error', $message);
+        $this->stateService->delete($id);
+        return redirect()->route('admin.states.index')->with('success', 'Xóa tỉnh/bang thành công');
     }
 }

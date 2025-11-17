@@ -10,6 +10,11 @@ class JobSkills extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'job_id',
+        'skill_id'
+    ];
+
     function skill() : BelongsTo {
         return $this->belongsTo(Skill::class, 'skill_id', 'id');
     }

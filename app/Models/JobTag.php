@@ -10,7 +10,13 @@ class JobTag extends Model
 {
     use HasFactory;
 
-    function tag() : BelongsTo {
+    // Thêm các trường được phép mass assignment
+    protected $fillable = [
+        'job_id',
+        'tag_id',
+    ];
+
+    function tag(): BelongsTo {
         return $this->belongsTo(Tag::class, 'tag_id', 'id');
     }
 }

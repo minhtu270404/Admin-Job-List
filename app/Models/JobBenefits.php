@@ -10,6 +10,11 @@ class JobBenefits extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'job_id',
+        'benefit_id'
+    ];
+
     function benefit() : BelongsTo {
         return $this->belongsTo(Benefits::class, 'benefit_id', 'id');
     }
