@@ -18,7 +18,7 @@ use App\Http\Controllers\Api\Frontend\LocationController;
 use App\Http\Controllers\Api\Frontend\NewsletterController;
 use App\Http\Controllers\Api\Frontend\PricingPageController;
 use App\Http\Controllers\Api\Frontend\ContactController;
-use App\Http\Controllers\Api\Frontend\JobController;
+use App\Http\Controllers\Api\Frontend\jobController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,11 +65,11 @@ Route::middleware('auth:sanctum')->prefix('company')->group(function () {
     Route::post('/profile/update-password', [CompanyProfileController::class, 'updatePassword']);
 
     // Company jobs management
-    Route::get('/jobs', [JobController::class, 'index']);
-    Route::post('/jobs', [JobController::class, 'store']);
-    Route::put('/jobs/{id}', [JobController::class, 'update']);
-    Route::delete('/jobs/{id}', [JobController::class, 'destroy']);
-    Route::get('/jobs/{id}/applications', [JobController::class, 'applications']);
+    Route::get('/jobs', [jobController::class, 'index']);
+    Route::post('/jobs', [jobController::class, 'store']);
+    Route::put('/jobs/{id}', [jobController::class, 'update']);
+    Route::delete('/jobs/{id}', [jobController::class, 'destroy']);
+    Route::get('/jobs/{id}/applications', [jobController::class, 'applications']);
 });
 
 // ------------------------ COMPANY / FRONTEND PAGES ------------------------
